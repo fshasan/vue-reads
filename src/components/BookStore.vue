@@ -34,6 +34,7 @@ body {
 <script setup>
 import { ref, watch } from 'vue';
 import { Button, Drawer } from 'ant-design-vue';
+import { ShoppingTwoTone, PlusCircleOutlined } from '@ant-design/icons-vue';
 
 const products = ref([
     { id: 1, name: 'Product 1', price: 10 },
@@ -60,11 +61,11 @@ const removeFromCart = (item) => {
 };
 
 watch(cart, () => {
-  totalPrice.value = calculateTotalPrice();
+    totalPrice.value = calculateTotalPrice();
 });
 
 const calculateTotalPrice = (cart) => {
-  return cart.reduce((total, item) => total + item.price, 0);
+    return cart.reduce((total, item) => total + item.price, 0);
 };
 
 const open = ref(false);
@@ -81,25 +82,32 @@ const closeDrawer = () => {
 
 <template>
     <div>
-        <h2>Products</h2>
+        <h2>List of Products</h2>
+        <div>
+            <Button type="primary" ghost @click="showDrawer">
+                <ShoppingTwoTone />
+            </Button>
+        </div>
+
         <div class="product-container">
             <div class="product-card" v-for="product in products" :key="product.id">
                 <h3>{{ product.name }}</h3>
                 <p>Price: {{ product.price }}</p>
-                <button @click="addToCart(product)">Add to Cart</button>
+                <Button type="primary" @click="addToCart(product)">
+                    <PlusCircleOutlined />
+                </Button>
             </div>
-
-            <Button type="primary" @click="showDrawer">Show Cart</Button>
-            <Drawer v-model:visible="open" class="custom-class" title="Shopping Cart" placement="right" @close="closeDrawer">
+            <Drawer v-model:visible="open" class="custom-class" title="Shopping Cart" placement="right"
+                @close="closeDrawer">
                 <div class="cart">
-                    <h2>List of Items</h2>
                     <div v-for="item in cart" :key="item.id">
                         <h3>{{ item.name }}</h3>
                         <p>Price: {{ item.price }}</p>
                         <button @click="removeFromCart(item)">Remove</button>
                     </div>
                 </div>
-                <h2>Total Cost: ${{ calculateTotalPrice(cart) }}</h2>
+                <h2 v-if="cart.length > 0">Total Cost: ${{ calculateTotalPrice(cart) }}</h2>
+                <h2 v-else>No items :(</h2>
             </Drawer>
 
         </div>
