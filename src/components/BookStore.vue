@@ -32,15 +32,25 @@ body {
 </style>
   
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
+import axios from "axios";
 import { Button, Drawer } from 'ant-design-vue';
 import { ShoppingTwoTone, PlusCircleOutlined } from '@ant-design/icons-vue';
 
-const products = ref([
-    { id: 1, name: 'Product 1', price: 10 },
-    { id: 2, name: 'Product 2', price: 15 },
-    { id: 3, name: 'Product 3', price: 20 },
-]);
+const products = ref([]);
+
+onMounted(async () => {
+  try {
+    const response = await axios.get(
+      "https://www.googleapis.com/books/v1/volumes?q=vue.js"
+    );
+
+    console.log(response);
+    products.value = response.data.items;
+  } catch (error) {
+    console.error("Error fetching books:", error);
+  }
+});
 
 const cart = ref([]);
 
