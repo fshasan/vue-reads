@@ -59,13 +59,12 @@ const removeFromCart = (item) => {
     }
 };
 
-// Calculate total price whenever the product list changes
 watch(cart, () => {
   totalPrice.value = calculateTotalPrice();
 });
 
-const calculateTotalPrice = () => {
-  return cart.value.reduce((total, item) => total + item.price, 0);
+const calculateTotalPrice = (cart) => {
+  return cart.reduce((total, item) => total + item.price, 0);
 };
 
 const open = ref(false);
@@ -100,7 +99,7 @@ const closeDrawer = () => {
                         <button @click="removeFromCart(item)">Remove</button>
                     </div>
                 </div>
-                <h3>Total Cost: {{ totalPrice }} </h3>
+                <h2>Total Cost: ${{ calculateTotalPrice(cart) }}</h2>
             </Drawer>
 
         </div>
