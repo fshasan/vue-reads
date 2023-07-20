@@ -30,7 +30,7 @@ body {
 
 .book-information-container {
     padding: 15px;
-    width: 200px;
+    width: 150px;
     display: inline-block;
 }
 
@@ -46,14 +46,14 @@ body {
 <script setup>
 import { ref, watch, onMounted } from 'vue';
 import axios from "axios";
-import { Button, Drawer, InputNumber, InputSearch } from 'ant-design-vue';
+import { Button, Drawer, InputNumber, InputSearch, Card, CardMeta } from 'ant-design-vue';
 import { ShoppingTwoTone, ShoppingCartOutlined } from '@ant-design/icons-vue';
-import Icon from '@ant-design/icons-vue/lib/components/Icon';
 import { toFixed } from 'ant-design-vue/es/input-number/src/utils/MiniDecimal';
 
 const products = ref([
     {
         id: 1,
+        image: "src/assets/images/the-great-gatsby.jpg",
         title: "The Great Gatsby",
         author: "F. Scott Fitzgerald",
         price: 10.99,
@@ -64,6 +64,7 @@ const products = ref([
     },
     {
         id: 2,
+        image: "src/assets/images/To_Kill_a_Mockingbird.jpg",
         title: "To Kill a Mockingbird",
         author: "Harper Lee",
         price: 12.50,
@@ -74,6 +75,7 @@ const products = ref([
     },
     {
         id: 3,
+        image: "src/assets/images/1984.jpg",
         title: "1984",
         author: "George Orwell",
         price: 9.80,
@@ -84,6 +86,7 @@ const products = ref([
     },
     {
         id: 4,
+        image: "src/assets/images/pride-and-prejudice.jpg",
         title: "Pride and Prejudice",
         author: "Jane Austen",
         price: 8.75,
@@ -94,6 +97,7 @@ const products = ref([
     },
     {
         id: 5,
+        image: "src/assets/images/harry_potter_and_the_sorcerer's_stone.jpg",
         title: "Harry Potter and the Sorcerer's Stone",
         author: "J.K. Rowling",
         price: 14.99,
@@ -104,6 +108,7 @@ const products = ref([
     },
     {
         id: 6,
+        image: "src/assets/images/the_hobbit.jpg",
         title: "The Hobbit",
         author: "J.R.R. Tolkien",
         price: 11.25,
@@ -114,6 +119,7 @@ const products = ref([
     },
     {
         id: 7,
+        image: "src/assets/images/The_Catcher_in_the_Rye.jpg",
         title: "The Catcher in the Rye",
         author: "J.D. Salinger",
         price: 10.00,
@@ -124,6 +130,7 @@ const products = ref([
     },
     {
         id: 8,
+        image: "src/assets/images/BraveNewWorld_FirstEdition.jpg",
         title: "Brave New World",
         author: "Aldous Huxley",
         price: 9.50,
@@ -134,6 +141,7 @@ const products = ref([
     },
     {
         id: 9,
+        image: "src/assets/images/LOR.jpg",
         title: "The Lord of the Rings: The Fellowship of the Ring",
         author: "J.R.R. Tolkien",
         price: 15.75,
@@ -177,7 +185,7 @@ const removeFromCart = (item) => {
 };
 
 watch(cart, () => {
-    totalPrice.value = parseFloat(calculateTotalPrice(),toFixed(2));
+    totalPrice.value = parseFloat(calculateTotalPrice(), toFixed(2));
 });
 
 const calculateTotalPrice = (cart) => {
@@ -212,6 +220,7 @@ const closeDrawer = () => {
 
         <div class="book-container">
             <div class="book-card" v-for="product in products" :key="product.id">
+                <img :alt="product.id" :src="product.image" width="150" height="200" />
                 <div class="book-information-container">
                     <h3>{{ product.title }}</h3>
                     <p><i>Genre: </i>{{ product.genre }}</p>
