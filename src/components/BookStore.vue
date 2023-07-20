@@ -3,12 +3,17 @@ body {
     background-color: #F4E0B9;
     color: black;
     margin-top: 50px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .head-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
 }
 
 .search-and-button {
@@ -26,13 +31,25 @@ body {
 .book-container {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+
+  .book-card {
+    width: calc(50% - 10px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+.book-card img {
+    object-fit: cover;
 }
 
 .book-information-container {
-    padding: 15px;
-    width: 150px;
-    display: inline-block;
-}
+    flex: 1;
+  }
 
 .book-card {
     flex: 0 0 20%;
@@ -220,7 +237,7 @@ const closeDrawer = () => {
 
         <div class="book-container">
             <div class="book-card" v-for="product in products" :key="product.id">
-                <img :alt="product.id" :src="product.image" width="150" height="200" />
+                <img :alt="product.id" :src="product.image" width="150" height="150" />
                 <div class="book-information-container">
                     <h3>{{ product.title }}</h3>
                     <p><i>Genre: </i>{{ product.genre }}</p>
