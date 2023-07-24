@@ -32,16 +32,16 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-  }
+}
 
 
-  .book-card {
+.book-card {
     width: calc(50% - 10px);
     display: flex;
     flex-direction: column;
     gap: 10px;
     margin-bottom: 20px;
-  }
+}
 
 .book-card img {
     object-fit: cover;
@@ -49,7 +49,7 @@ body {
 
 .book-information-container {
     flex: 1;
-  }
+}
 
 .book-card {
     flex: 0 0 20%;
@@ -60,18 +60,31 @@ body {
 }
 </style>
     
-<script setup>
-import { ref, watch, onMounted } from 'vue';
-import axios from "axios";
-import { Button, Drawer, InputNumber, InputSearch, Card, CardMeta } from 'ant-design-vue';
-import { ShoppingTwoTone, ShoppingCartOutlined } from '@ant-design/icons-vue';
-import { toFixed } from 'ant-design-vue/es/input-number/src/utils/MiniDecimal';
+<script setup lang="ts">
+import { Ref, ref, watch } from 'vue';
+import { Button, Drawer, InputSearch, Switch } from 'ant-design-vue';
+import { ShoppingTwoTone, ShoppingCartOutlined, BulbFilled, MonitorOutlined, StarOutlined } from '@ant-design/icons-vue';
+import Icon from '@ant-design/icons-vue/lib/components/Icon';
 
-const products = ref([
+type Product = {
+    id: string,
+    image: string,
+    title: string,
+    author: string,
+    price: number,
+    genre: string,
+    publicationYear: number,
+    language: string,
+    pages: number,
+}
+
+const products = ref<Product[]>([]);
+
+products.value = [
     {
+        title: "The Great Gatsby",
         id: 1,
         image: "src/assets/images/the-great-gatsby.jpg",
-        title: "The Great Gatsby",
         author: "F. Scott Fitzgerald",
         price: 10.99,
         genre: "Fiction",
@@ -80,6 +93,7 @@ const products = ref([
         pages: 180,
     },
     {
+        title: "The Great Gatsby",
         id: 2,
         image: "src/assets/images/To_Kill_a_Mockingbird.jpg",
         title: "To Kill a Mockingbird",
@@ -167,47 +181,39 @@ const products = ref([
         language: "English",
         pages: 398,
     },
-]);
+]
 
-// onMounted(async () => {
-//   try {
-//     const response = await axios.get(
-//       "https://www.googleapis.com/books/v1/volumes?q=vue.js"
-//     );
+const cart = ref<Product[]>([]);
 
-//     console.log(response);
-//     products.value = response.data.items;
-//   } catch (error) {
-//     console.error("Error fetching books:", error);
-//   }
-// });
+const totalPrice = ref<string>('0');
 
-const cart = ref([]);
-const quantity = ref(0);
+const isDarkMode = ref<boolean>(false);
 
-const totalPrice = ref(0);
+const toggleSwitch = () => {
+    isDarkMode.value = !isDarkMode.value;
+};
 
-const addToCart = (product) => {
+const addToCart = (product: Product): void => {
 
-    if (!cart.value.some(item => item.id === product.id)) {
+    if (!cart.value.some((item: Product) => item.id === product.id)) {
         cart.value.push(product);
     }
 };
 
-const removeFromCart = (item) => {
+const removeFromCart = (item: Product) => {
     const index = cart.value.findIndex(cartItem => cartItem.id === item.id);
     if (index !== -1) {
         cart.value.splice(index, 1);
     }
 };
 
-watch(cart, () => {
-    totalPrice.value = parseFloat(calculateTotalPrice()).toFixed(2);
-});
-
-const calculateTotalPrice = (cart) => {
-    return cart.reduce((total, item) => total + item.price, 0);
+const calculateTotalPrice = (cart: Product[]): number => {
+    return cart.reduce((total: number, item: Product) => total + item.price, 0);
 };
+
+watch(cart, () => {
+    totalPrice.value = calculateTotalPrice(cart.value).toFixed(2);
+});
 
 const open = ref(false);
 
@@ -225,6 +231,9 @@ const closeDrawer = () => {
     <div>
         <div class="head-container">
             <h2>List of Books</h2>
+            <StarOutlined v-if="isDarkMode" />
+            <BulbFilled v-else />
+            <Switch :checked="isDarkMode" @change="toggleSwitch" />
             <div class="search-and-button">
                 <InputSearch placeholder="Search Books" />
                 <div class="shopping-cart-button">
@@ -240,7 +249,7 @@ const closeDrawer = () => {
                 <img :alt="product.id" :src="product.image" width="150" height="150" />
                 <div class="book-information-container">
                     <h3>{{ product.title }}</h3>
-                    <p><i>Genre: </i>{{ product.genre }}</p>
+                    <p><i>Genre: </i>{{ product.author }}</p>
                     <p><i>Price: </i>${{ product.price }}</p>
                 </div>
 
@@ -256,7 +265,6 @@ const closeDrawer = () => {
                 <div class="cart">
                     <div v-for="item in cart" :key="item.id">
                         <h3>{{ item.title }}</h3>
-                        <p>Genre: {{ item.genre }}</p>
                         <p>Price: {{ item.price }}</p>
                         <Button type="primary" danger ghost @click="removeFromCart(item)">Remove</Button>
                     </div>
