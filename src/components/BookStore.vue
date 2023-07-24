@@ -202,7 +202,7 @@ const removeFromCart = (item) => {
 };
 
 watch(cart, () => {
-    totalPrice.value = parseFloat(calculateTotalPrice(), toFixed(2));
+    totalPrice.value = parseFloat(calculateTotalPrice()).toFixed(2);
 });
 
 const calculateTotalPrice = (cart) => {
