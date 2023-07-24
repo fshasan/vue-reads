@@ -1,6 +1,6 @@
 <style>
 body {
-    background-color: #F4E0B9;
+    background-color: #F6EFE4;
     color: black;
     margin-top: 50px;
     min-height: 100vh;
@@ -62,8 +62,8 @@ body {
     
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { Button, Drawer, InputSearch, Switch } from 'ant-design-vue';
-import { ShoppingTwoTone, ShoppingCartOutlined, BulbFilled, StarOutlined } from '@ant-design/icons-vue';
+import { Button, Drawer, InputSearch, Switch, Card } from 'ant-design-vue';
+import { ShoppingTwoTone, ShoppingCartOutlined, CloseOutlined, BulbFilled, StarOutlined } from '@ant-design/icons-vue';
 
 type Product = {
     id: number,
@@ -251,6 +251,8 @@ const closeDrawer = () => {
                 <img :src="product.image" width="150" height="150" />
                 <div class="book-information-container">
                     <h3>{{ product.title }}</h3>
+                    <p><i>Author: </i>{{ product.author }}</p>
+                    <p><i>Genre: </i>{{ product.genre }}</p>
                     <p><i>Price: </i>${{ product.price }}</p>
                 </div>
 
@@ -263,14 +265,16 @@ const closeDrawer = () => {
             </div>
             <Drawer v-model:visible="open" class="custom-class" title="Shopping Cart" placement="right"
                 @close="closeDrawer">
-                <div class="cart">
-                    <div v-for="item in cart" :key="item.id">
-                        <h3>{{ item.title }}</h3>
-                        <p>Price: {{ item.price }}</p>
-                        <Button type="primary" danger ghost @click="removeFromCart(item)">Remove</Button>
-                    </div>
-                </div>
-                <h2 v-if="cart.length > 0">Total Cost: ${{ calculateTotalPrice(cart) }} <br><Button danger @click="clearCart">Clear All</Button></h2>
+                <Card v-for="item in cart" :key="item.id" :title="item.title">
+                    <template #extra>
+                        <Button type="primary" danger ghost @click="removeFromCart(item)"><CloseOutlined /></Button>
+                    </template>
+                    <p>Genre: {{ item.genre }}</p>
+                    <p>Price: ${{ item.price }}</p>
+                </Card>
+                <br>
+                <h2 v-if="cart.length > 0">Total Cost: ${{ calculateTotalPrice(cart) }} <br><Button danger
+                        @click="clearCart">Clear All</Button></h2>
                 <h2 v-else>No items :(</h2>
             </Drawer>
         </div>
