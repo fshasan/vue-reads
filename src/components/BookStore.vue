@@ -66,7 +66,7 @@ import { Button, Drawer, InputSearch, Switch } from 'ant-design-vue';
 import { ShoppingTwoTone, ShoppingCartOutlined, BulbFilled, StarOutlined } from '@ant-design/icons-vue';
 
 type Product = {
-    id: string,
+    id: number,
     image: string,
     title: string,
     author: string,
@@ -92,7 +92,6 @@ products.value = [
         pages: 180,
     },
     {
-        title: "The Great Gatsby",
         id: 2,
         image: "src/assets/images/To_Kill_a_Mockingbird.jpg",
         title: "To Kill a Mockingbird",
@@ -206,6 +205,10 @@ const removeFromCart = (item: Product) => {
     }
 };
 
+const clearCart = () => {
+    cart.value = [];
+};
+
 const calculateTotalPrice = (cart: Product[]): number => {
     return cart.reduce((total: number, item: Product) => total + item.price, 0);
 };
@@ -245,7 +248,7 @@ const closeDrawer = () => {
 
         <div class="book-container">
             <div class="book-card" v-for="product in products" :key="product.id">
-                <img :alt="product.id" :src="product.image" width="150" height="150" />
+                <img :src="product.image" width="150" height="150" />
                 <div class="book-information-container">
                     <h3>{{ product.title }}</h3>
                     <p><i>Price: </i>${{ product.price }}</p>
@@ -267,7 +270,7 @@ const closeDrawer = () => {
                         <Button type="primary" danger ghost @click="removeFromCart(item)">Remove</Button>
                     </div>
                 </div>
-                <h2 v-if="cart.length > 0">Total Cost: ${{ calculateTotalPrice(cart) }}</h2>
+                <h2 v-if="cart.length > 0">Total Cost: ${{ calculateTotalPrice(cart) }} <br><Button danger @click="clearCart">Clear All</Button></h2>
                 <h2 v-else>No items :(</h2>
             </Drawer>
         </div>
