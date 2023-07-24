@@ -61,10 +61,9 @@ body {
 </style>
     
 <script setup lang="ts">
-import { Ref, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { Button, Drawer, InputSearch, Switch } from 'ant-design-vue';
-import { ShoppingTwoTone, ShoppingCartOutlined, BulbFilled, MonitorOutlined, StarOutlined } from '@ant-design/icons-vue';
-import Icon from '@ant-design/icons-vue/lib/components/Icon';
+import { ShoppingTwoTone, ShoppingCartOutlined, BulbFilled, StarOutlined } from '@ant-design/icons-vue';
 
 type Product = {
     id: string,
@@ -249,7 +248,6 @@ const closeDrawer = () => {
                 <img :alt="product.id" :src="product.image" width="150" height="150" />
                 <div class="book-information-container">
                     <h3>{{ product.title }}</h3>
-                    <p><i>Genre: </i>{{ product.author }}</p>
                     <p><i>Price: </i>${{ product.price }}</p>
                 </div>
 
