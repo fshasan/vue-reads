@@ -63,7 +63,7 @@ body {
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { Button, Drawer, InputSearch, Switch, Card } from 'ant-design-vue';
-import { ShoppingTwoTone, ShoppingCartOutlined, CloseOutlined, BulbFilled, StarOutlined } from '@ant-design/icons-vue';
+import { ShoppingTwoTone, ShoppingCartOutlined, DeleteOutlined, BulbFilled, StarOutlined } from '@ant-design/icons-vue';
 
 type Product = {
     id: number,
@@ -267,7 +267,9 @@ const closeDrawer = () => {
                 @close="closeDrawer">
                 <Card v-for="item in cart" :key="item.id" :title="item.title">
                     <template #extra>
-                        <Button type="primary" danger ghost @click="removeFromCart(item)"><CloseOutlined /></Button>
+                        <Button type="primary" danger ghost @click="removeFromCart(item)">
+                            <DeleteOutlined />
+                        </Button>
                     </template>
                     <p>Genre: {{ item.genre }}</p>
                     <p>Price: ${{ item.price }}</p>
