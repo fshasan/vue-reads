@@ -36,33 +36,55 @@ body {
 
 
 .book-card {
-    width: calc(50% - 10px);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
+    width: calc(33.33% - 20px);
+    margin: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
 }
 
 .book-card img {
     object-fit: cover;
 }
 
+.book-card img,
 .book-information-container {
-    flex: 1;
+    display: block;
+    width: 100%;
 }
 
-.book-card {
-    flex: 0 0 20%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 10px;
-    margin: 10px;
+.book-information-container h3 {
+    margin: 10px 0;
+    font-size: 18px;
+}
+
+.book-information-container p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.total-cost-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@media screen and (max-width: 768px) {
+    .book-card {
+        width: calc(50% - 20px);
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .book-card {
+        width: 100%;
+    }
 }
 </style>
     
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import { Button, Drawer, InputSearch, Switch, Card } from 'ant-design-vue';
+import { ref, computed, watch } from 'vue';
+import { Button, Drawer, Input, Switch, Card } from 'ant-design-vue';
 import { ShoppingTwoTone, ShoppingCartOutlined, DeleteOutlined, BulbFilled, StarOutlined } from '@ant-design/icons-vue';
 
 type Product = {
@@ -191,6 +213,20 @@ const toggleSwitch = () => {
     isDarkMode.value = !isDarkMode.value;
 };
 
+const searchQuery = ref<string>('');
+
+const filteredProducts = computed(() => {
+    const query = searchQuery.value.toLowerCase().trim();
+    if (query === '') {
+        return products.value;
+    }
+    return products.value.filter((product) => {
+        const title = product.title.toLowerCase();
+        const author = product.author.toLowerCase();
+        return title.includes(query) || author.includes(query);
+    });
+});
+
 const addToCart = (product: Product): void => {
 
     if (!cart.value.some((item: Product) => item.id === product.id)) {
@@ -237,7 +273,7 @@ const closeDrawer = () => {
             <BulbFilled v-else />
             <Switch :checked="isDarkMode" @change="toggleSwitch" />
             <div class="search-and-button">
-                <InputSearch placeholder="Search Books" />
+                <Input v-model="searchQuery" placeholder="Search Books"/>
                 <div class="shopping-cart-button">
                     <Button type="primary" ghost @click="showDrawer">
                         <ShoppingTwoTone />
@@ -247,7 +283,7 @@ const closeDrawer = () => {
         </div>
 
         <div class="book-container">
-            <div class="book-card" v-for="product in products" :key="product.id">
+            <div class="book-card" v-for="product in filteredProducts" :key="product.id">
                 <img :src="product.image" width="150" height="150" />
                 <div class="book-information-container">
                     <h3>{{ product.title }}</h3>
@@ -275,9 +311,12 @@ const closeDrawer = () => {
                     <p>Price: ${{ item.price }}</p>
                 </Card>
                 <br>
-                <h2 v-if="cart.length > 0">Total Cost: ${{ calculateTotalPrice(cart) }} <br><Button danger
-                        @click="clearCart">Clear All</Button></h2>
-                <h2 v-else>No items :(</h2>
+                <div class="total-cost-container">
+                    <h2 v-if="cart.length > 0">Total Cost: ${{ calculateTotalPrice(cart) }}
+                        <br> <Button danger @click="clearCart">Clear All</Button>
+                    </h2>
+                    <h2 v-else>No items :(</h2>
+                </div>
             </Drawer>
         </div>
     </div>
