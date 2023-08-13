@@ -273,7 +273,7 @@ const closeDrawer = () => {
             <BulbFilled v-else />
             <Switch :checked="isDarkMode" @change="toggleSwitch" />
             <div class="search-and-button">
-                <Input v-model="searchQuery" placeholder="Search Books"/>
+                <Input v-model:value="searchQuery" placeholder="Search Books"/>
                 <div class="shopping-cart-button">
                     <Button type="primary" ghost @click="showDrawer">
                         <ShoppingTwoTone />
