@@ -98,6 +98,11 @@ type Product = {
     language: string,
     pages: number,
 }
+type Cart = {
+    id: number,
+    title: string,
+    price: number,
+}
 
 const products = ref<Product[]>([]);
 
@@ -203,7 +208,7 @@ products.value = [
     },
 ]
 
-const cart = ref<Product[]>([]);
+const cart = ref<Cart[]>([]);
 
 const totalPrice = ref<string>('0');
 
