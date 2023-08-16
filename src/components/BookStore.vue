@@ -102,6 +102,7 @@ type Cart = {
     id: number,
     title: string,
     price: number,
+    quantity: number,
 }
 
 const products = ref<Product[]>([]);
@@ -234,12 +235,18 @@ const filteredProducts = computed(() => {
 
 const addToCart = (product: Product): void => {
 
-    if (!cart.value.some((item: Product) => item.id === product.id)) {
-        cart.value.push(product);
+    if (!cart.value.some((item: Cart) => item.id === product.id)) {
+        const cartItem: Cart = {
+            id: product.id,
+            title: product.title,
+            price: product.price,
+            quantity: 1,
+        }
+        cart.value.push(cartItem);
     }
 };
 
-const removeFromCart = (item: Product) => {
+const removeFromCart = (item: Cart) => {
     const index = cart.value.findIndex(cartItem => cartItem.id === item.id);
     if (index !== -1) {
         cart.value.splice(index, 1);
@@ -250,8 +257,8 @@ const clearCart = () => {
     cart.value = [];
 };
 
-const calculateTotalPrice = (cart: Product[]): number => {
-    return cart.reduce((total: number, item: Product) => total + item.price, 0);
+const calculateTotalPrice = (cart: Cart[]): number => {
+    return cart.reduce((total: number, item: Cart) => total + item.price, 0);
 };
 
 watch(cart, () => {
@@ -278,7 +285,7 @@ const closeDrawer = () => {
             <BulbFilled v-else />
             <Switch :checked="isDarkMode" @change="toggleSwitch" />
             <div class="search-and-button">
-                <Input v-model:value="searchQuery" placeholder="Search Books"/>
+                <Input v-model:value="searchQuery" placeholder="Search Books" />
                 <div class="shopping-cart-button">
                     <Button type="primary" ghost @click="showDrawer">
                         <ShoppingTwoTone />
@@ -312,8 +319,8 @@ const closeDrawer = () => {
                             <DeleteOutlined />
                         </Button>
                     </template>
-                    <p>Genre: {{ item.genre }}</p>
                     <p>Price: ${{ item.price }}</p>
+                    <p>Quantity: {{ item.quantity }}</p>
                 </Card>
                 <br>
                 <div class="total-cost-container">
