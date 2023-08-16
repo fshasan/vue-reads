@@ -85,7 +85,7 @@ body {
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { Button, Drawer, Input, Switch, Card } from 'ant-design-vue';
-import { ShoppingTwoTone, ShoppingCartOutlined, DeleteOutlined, BulbFilled, StarOutlined } from '@ant-design/icons-vue';
+import { ShoppingTwoTone, ShoppingCartOutlined, BulbFilled, StarOutlined, PlusCircleOutlined, MinusCircleOutlined, DeleteOutlined } from '@ant-design/icons-vue';
 
 type Product = {
     id: number,
@@ -101,7 +101,8 @@ type Product = {
 type Cart = {
     id: number,
     title: string,
-    price: number,
+    basePrice: number,
+    quantitativePrice: number,
     quantity: number,
 }
 
@@ -233,16 +234,39 @@ const filteredProducts = computed(() => {
     });
 });
 
+const open = ref(false);
+
+const showDrawer = () => {
+    open.value = true;
+};
+
+const closeDrawer = () => {
+    open.value = false;
+};
+
 const addToCart = (product: Product): void => {
 
     if (!cart.value.some((item: Cart) => item.id === product.id)) {
         const cartItem: Cart = {
             id: product.id,
             title: product.title,
-            price: product.price,
+            basePrice: product.price,
+            quantitativePrice: product.price,
             quantity: 1,
         }
         cart.value.push(cartItem);
+    }
+};
+
+const increaseQuantity = (item: Cart): void => {
+    item.quantity++
+    item.quantitativePrice = item.quantitativePrice + item.basePrice
+};
+
+const decreaseQuantity = (item: Cart) => {
+    if (item.quantity > 1) {
+        item.quantity--
+        item.quantitativePrice = item.quantitativePrice - item.basePrice
     }
 };
 
@@ -258,22 +282,12 @@ const clearCart = () => {
 };
 
 const calculateTotalPrice = (cart: Cart[]): number => {
-    return cart.reduce((total: number, item: Cart) => total + item.price, 0);
+    return cart.reduce((total: number, item: Cart) => total + item.quantitativePrice, 0);
 };
 
 watch(cart, () => {
     totalPrice.value = calculateTotalPrice(cart.value).toFixed(2);
 });
-
-const open = ref(false);
-
-const showDrawer = () => {
-    open.value = true;
-};
-
-const closeDrawer = () => {
-    open.value = false;
-};
 
 </script>
 
@@ -313,14 +327,24 @@ const closeDrawer = () => {
             </div>
             <Drawer v-model:visible="open" class="custom-class" title="Shopping Cart" placement="right"
                 @close="closeDrawer">
-                <Card v-for="item in cart" :key="item.id" :title="item.title">
+                <Card v-for="item in cart" :key="item.id" :title="'Item No. ' + item.id">
                     <template #extra>
-                        <Button type="primary" danger ghost @click="removeFromCart(item)">
-                            <DeleteOutlined />
+                        <Button type="primary" danger @click="decreaseQuantity(item)" :disabled="item.quantity === 1">
+                            <MinusCircleOutlined />
+                        </Button>
+                        <Button type="primary" danger ghost>
+                            {{ item.quantity }}
+                        </Button>
+                        <Button type="primary" @click="increaseQuantity(item)">
+                            <PlusCircleOutlined />
                         </Button>
                     </template>
-                    <p>Price: ${{ item.price }}</p>
-                    <p>Quantity: {{ item.quantity }}</p>
+                    <Button type="primary" danger ghost @click="removeFromCart(item)">
+                        <DeleteOutlined />
+                    </Button>
+                    <h3>{{ item.title }}</h3>
+                    <p>Price: ${{ item.quantitativePrice }}</p>
+
                 </Card>
                 <br>
                 <div class="total-cost-container">
