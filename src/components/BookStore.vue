@@ -32,6 +32,9 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 
@@ -84,7 +87,7 @@ body {
     
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-import { Button, Drawer, Input, Switch, Card, Space } from 'ant-design-vue';
+import { Button, Badge, Drawer, Input, Switch, Card, Space } from 'ant-design-vue';
 import { ShoppingTwoTone, ShoppingCartOutlined, BulbFilled, StarOutlined, PlusCircleOutlined, MinusCircleOutlined, DeleteOutlined } from '@ant-design/icons-vue';
 
 type Product = {
@@ -301,9 +304,9 @@ watch(cart, () => {
             <div class="search-and-button">
                 <Input v-model:value="searchQuery" placeholder="Search Books" />
                 <div class="shopping-cart-button">
-                    <Button type="primary" ghost @click="showDrawer">
+                    <Badge :count="cart.length" type="primary" ghost @click="showDrawer">
                         <ShoppingTwoTone />
-                    </Button>
+                    </Badge>
                 </div>
             </div>
         </div>
