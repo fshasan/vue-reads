@@ -1,90 +1,3 @@
-<style>
-body {
-    background-color: #F6EFE4;
-    color: black;
-    margin-top: 50px;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.head-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.search-and-button {
-    display: flex;
-}
-
-.shopping-cart-button {
-    margin-left: 10px;
-}
-
-.add-to-cart-container {
-    margin-left: 5px;
-}
-
-.book-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    width: 70%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-
-.book-card {
-    width: calc(33.33% - 20px);
-    margin: 10px;
-    padding: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
-
-.book-card img {
-    object-fit: cover;
-}
-
-.book-card img,
-.book-information-container {
-    display: block;
-    width: 100%;
-}
-
-.book-information-container h3 {
-    margin: 10px 0;
-    font-size: 18px;
-}
-
-.book-information-container p {
-    margin: 5px 0;
-    font-size: 14px;
-}
-
-.total-cost-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-@media screen and (max-width: 768px) {
-    .book-card {
-        width: calc(50% - 20px);
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .book-card {
-        width: 100%;
-    }
-}
-</style>
-    
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { Button, Badge, Drawer, Input, Switch, Card, Space, Popconfirm, notification } from 'ant-design-vue';
@@ -218,12 +131,6 @@ const cart = ref<Cart[]>([]);
 
 const totalPrice = ref<string>('0');
 
-const isDarkMode = ref<boolean>(false);
-
-const toggleSwitch = () => {
-    isDarkMode.value = !isDarkMode.value;
-};
-
 const searchQuery = ref<string>('');
 
 const filteredProducts = computed(() => {
@@ -318,9 +225,6 @@ watch(cart, () => {
     <div>
         <div class="head-container">
             <h2>List of Books</h2>
-            <StarOutlined v-if="isDarkMode" />
-            <BulbFilled v-else />
-            <Switch :checked="isDarkMode" @change="toggleSwitch" />
             <div class="search-and-button">
                 <Input v-model:value="searchQuery" placeholder="Search Books" />
                 <div class="shopping-cart-button">
@@ -380,7 +284,19 @@ watch(cart, () => {
                             <template #icon>
                                 <QuestionCircleFilled style="color: red" />
                             </template>
-                            <br> <Button danger>Clear All</Button>
+                            <div :style="{
+                                position: 'absolute',
+                                right: 0,
+                                bottom: 0,
+                                width: '100%',
+                                borderTop: '1px solid #e9e9e9',
+                                padding: '10px 16px',
+                                background: '#fff',
+                                textAlign: 'center',
+                                zIndex: 1,
+                            }">
+                                <Button v-if="cart.length > 1" danger>Clear All</Button>
+                            </div>
                         </Popconfirm>
                     </h2>
                     <h2 v-else>No items :(</h2>
@@ -389,4 +305,94 @@ watch(cart, () => {
         </div>
     </div>
 </template>
+
+<style>
+body {
+    background-color: #F6EFE4;
+    color: black;
+    margin-top: 50px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.head-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.search-and-button {
+    display: flex;
+}
+
+.shopping-cart-button {
+    margin-left: 10px;
+}
+
+.add-to-cart-container {
+    margin-left: 5px;
+}
+
+.book-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.book-card {
+    width: calc(33.33% - 20px);
+    margin: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.book-card img {
+    object-fit: cover;
+}
+
+.book-card img,
+.book-information-container {
+    display: block;
+    width: 100%;
+}
+
+.book-information-container h3 {
+    margin: 10px 0;
+    font-size: 18px;
+}
+
+.book-information-container p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.total-cost-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@media screen and (max-width: 768px) {
+    .book-card {
+        width: calc(50% - 20px);
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .book-card {
+        width: 100%;
+    }
+}
+</style>
     
