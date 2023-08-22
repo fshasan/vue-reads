@@ -87,8 +87,9 @@ body {
     
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-import { Button, Badge, Drawer, Input, Switch, Card, Space } from 'ant-design-vue';
-import { ShoppingTwoTone, ShoppingCartOutlined, BulbFilled, StarOutlined, PlusCircleOutlined, MinusCircleOutlined, DeleteOutlined } from '@ant-design/icons-vue';
+import { Button, Badge, Drawer, Input, Switch, Card, Space, Popconfirm } from 'ant-design-vue';
+import { ShoppingTwoTone, ShoppingCartOutlined, BulbFilled, StarOutlined, PlusCircleOutlined, MinusCircleOutlined, DeleteOutlined, QuestionCircleFilled } from '@ant-design/icons-vue';
+import Swal from 'sweetalert2';
 
 type Product = {
     id: number,
@@ -258,6 +259,17 @@ const addToCart = (product: Product): void => {
             quantity: 1,
         }
         cart.value.push(cartItem);
+        Swal.fire({
+            icon: 'success',
+            title: 'Added to Cart',
+            text: `${product.title} has been added to your cart.`,
+        });
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Already in Cart',
+            text: `${product.title} is already in your cart!`,
+        });
     }
 };
 
@@ -277,11 +289,19 @@ const removeFromCart = (item: Cart) => {
     const index = cart.value.findIndex(cartItem => cartItem.id === item.id);
     if (index !== -1) {
         cart.value.splice(index, 1);
+        Swal.fire({
+            icon: 'success',
+            text: `Product has been removed from your cart.`,
+        });
     }
 };
 
 const clearCart = () => {
     cart.value = [];
+    Swal.fire({
+        icon: 'success',
+        text: `All products removed from cart.`,
+    });
 };
 
 const calculateTotalPrice = (cart: Cart[]): number => {
@@ -356,7 +376,12 @@ watch(cart, () => {
                 <br>
                 <div class="total-cost-container">
                     <h2 v-if="cart.length > 0">Total Cost: ${{ calculateTotalPrice(cart) }}
-                        <br> <Button danger @click="clearCart">Clear All</Button>
+                        <Popconfirm title="Remove all products?" @confirm="clearCart">
+                            <template #icon>
+                                <QuestionCircleFilled style="color: red" />
+                            </template>
+                            <br> <Button danger>Clear All</Button>
+                        </Popconfirm>
                     </h2>
                     <h2 v-else>No items :(</h2>
                 </div>
