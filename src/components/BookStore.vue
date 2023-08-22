@@ -2,8 +2,6 @@
 import { ref, computed, watch } from 'vue';
 import { Button, Badge, Drawer, Input, Switch, Card, Space, Popconfirm, notification } from 'ant-design-vue';
 import { ShoppingTwoTone, ShoppingCartOutlined, BulbFilled, StarOutlined, PlusCircleOutlined, MinusCircleOutlined, DeleteOutlined, QuestionCircleFilled } from '@ant-design/icons-vue';
-import Swal from 'sweetalert2';
-
 type Product = {
     id: number,
     image: string,
@@ -203,7 +201,7 @@ const removeFromCart = (item: Cart) => {
 
 const clearCart = () => {
     cart.value = [];
-    open.value = false;
+    closeDrawer();
     notification.open({
         message: 'Success!',
         description: `All products removed from cart.`,
