@@ -303,12 +303,13 @@ const clearCart = () => {
     });
 };
 
-const calculateTotalPrice = (cart: Cart[]): number => {
-    return cart.reduce((total: number, item: Cart) => total + item.quantitativePrice, 0);
+const calculateTotalPrice = (cart: Cart[]): string => {
+    const total = cart.reduce((accumulator: number, item: Cart) => accumulator + item.quantitativePrice, 0);
+    return total.toFixed(2);
 };
 
 watch(cart, () => {
-    totalPrice.value = calculateTotalPrice(cart.value).toFixed(2);
+    totalPrice.value = calculateTotalPrice(cart.value);
 });
 
 </script>
