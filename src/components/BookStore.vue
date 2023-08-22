@@ -87,7 +87,7 @@ body {
     
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-import { Button, Badge, Drawer, Input, Switch, Card, Space, Popconfirm } from 'ant-design-vue';
+import { Button, Badge, Drawer, Input, Switch, Card, Space, Popconfirm, notification } from 'ant-design-vue';
 import { ShoppingTwoTone, ShoppingCartOutlined, BulbFilled, StarOutlined, PlusCircleOutlined, MinusCircleOutlined, DeleteOutlined, QuestionCircleFilled } from '@ant-design/icons-vue';
 import Swal from 'sweetalert2';
 
@@ -259,16 +259,14 @@ const addToCart = (product: Product): void => {
             quantity: 1,
         }
         cart.value.push(cartItem);
-        Swal.fire({
-            icon: 'success',
-            title: 'Added to Cart',
-            text: `${product.title} has been added to your cart.`,
+        notification.open({
+            message: 'Success!',
+            description: `${product.title} has been added to cart.`,
         });
     } else {
-        Swal.fire({
-            icon: 'error',
-            title: 'Already in Cart',
-            text: `${product.title} is already in your cart!`,
+        notification.open({
+            message: 'Warning!',
+            description: `${product.title} is already in your cart!`,
         });
     }
 };
@@ -289,18 +287,19 @@ const removeFromCart = (item: Cart) => {
     const index = cart.value.findIndex(cartItem => cartItem.id === item.id);
     if (index !== -1) {
         cart.value.splice(index, 1);
-        Swal.fire({
-            icon: 'success',
-            text: `Product has been removed from your cart.`,
+        notification.open({
+            message: 'Success!',
+            description: `Product has been removed from your cart.`,
         });
     }
 };
 
 const clearCart = () => {
     cart.value = [];
-    Swal.fire({
-        icon: 'success',
-        text: `All products removed from cart.`,
+    open.value = false;
+    notification.open({
+        message: 'Success!',
+        description: `All products removed from cart.`,
     });
 };
 
