@@ -1,14 +1,5 @@
-# vue-reads
-
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+# About Project
+Vue Reads is an online book shop built using Vue.js, the Composition API, and Vue Ant Design UI library. The project focuses on  users to browse a collection of products and add them to their shopping cart.
 
 ## Project Setup
 
