@@ -12,7 +12,8 @@
     "ant-design-vue": "^4.0.0",
     "axios": "^1.4.0",
     "sweetalert2": "^11.7.27",
-    "vue": "^3.3.4"
+    "vue": "^3.3.4",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",

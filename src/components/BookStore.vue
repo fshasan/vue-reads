@@ -1,29 +1,22 @@
-<script setup lang="ts">
-import { ref, computed, watch } from 'vue';
-import { Button, Badge, Drawer, Input, Switch, Card, Space, Popconfirm, notification } from 'ant-design-vue';
-import { ShoppingTwoTone, ShoppingCartOutlined, BulbFilled, StarOutlined, PlusCircleOutlined, MinusCircleOutlined, DeleteOutlined, QuestionCircleFilled } from '@ant-design/icons-vue';
-type Product = {
-    id: number,
-    image: string,
-    title: string,
-    author: string,
-    price: number,
-    genre: string,
-    publicationYear: number,
-    language: string,
-    pages: number,
-}
-type Cart = {
-    id: number,
-    title: string,
-    basePrice: number,
-    quantitativePrice: number,
-    quantity: number,
-}
+<script setup>
+import { ref, computed } from 'vue';
+import {
+    Button, Badge, Drawer,
+    Input, Card, Space,
+    Popconfirm, notification,
+} from 'ant-design-vue';
 
-const products = ref<Product[]>([]);
+import {
+    ShoppingTwoTone,
+    ShoppingCartOutlined,
+    PlusCircleOutlined,
+    MinusCircleOutlined,
+    DeleteOutlined,
+    QuestionCircleFilled,
+} from '@ant-design/icons-vue';
+import { useStore } from 'vuex';
 
-products.value = [
+const products = ref([
     {
         title: "The Great Gatsby",
         id: 1,
@@ -123,13 +116,12 @@ products.value = [
         language: "English",
         pages: 398,
     },
-]
 
-const cart = ref<Cart[]>([]);
+]);
 
-const totalPrice = ref<string>('0');
+const cart = ref([]);
 
-const searchQuery = ref<string>('');
+const searchQuery = ref('');
 
 const filteredProducts = computed(() => {
     const query = searchQuery.value.toLowerCase().trim();
@@ -153,17 +145,11 @@ const closeDrawer = () => {
     open.value = false;
 };
 
-const addToCart = (product: Product): void => {
+const store = useStore();
 
-    if (!cart.value.some((item: Cart) => item.id === product.id)) {
-        const cartItem: Cart = {
-            id: product.id,
-            title: product.title,
-            basePrice: product.price,
-            quantitativePrice: product.price,
-            quantity: 1,
-        }
-        cart.value.push(cartItem);
+const addToCart = (product) => {
+    if (!store.state.cart.some((item) => item.id === product.id)) {
+        store.commit('addToCart', product);
         notification.open({
             message: 'Success!',
             description: `${product.title} has been added to cart.`,
@@ -175,47 +161,6 @@ const addToCart = (product: Product): void => {
         });
     }
 };
-
-const increaseQuantity = (item: Cart): void => {
-    item.quantity++
-    item.quantitativePrice += item.basePrice
-};
-
-const decreaseQuantity = (item: Cart) => {
-    if (item.quantity > 1) {
-        item.quantity--
-        item.quantitativePrice -= item.basePrice
-    }
-};
-
-const removeFromCart = (item: Cart) => {
-    const index = cart.value.findIndex(cartItem => cartItem.id === item.id);
-    if (index !== -1) {
-        cart.value.splice(index, 1);
-        notification.open({
-            message: 'Success!',
-            description: `Product has been removed from your cart.`,
-        });
-    }
-};
-
-const clearCart = () => {
-    cart.value = [];
-    closeDrawer();
-    notification.open({
-        message: 'Success!',
-        description: `All products removed from cart.`,
-    });
-};
-
-const calculateTotalPrice = (cart: Cart[]): string => {
-    const total = cart.reduce((accumulator: number, item: Cart) => accumulator + item.quantitativePrice, 0);
-    return total.toFixed(2);
-};
-
-watch(cart, () => {
-    totalPrice.value = calculateTotalPrice(cart.value);
-});
 
 </script>
 
@@ -277,7 +222,7 @@ watch(cart, () => {
 
                 <br>
                 <div class="total-cost-container">
-                    <h2 v-if="cart.length > 0">Total Cost: ${{ calculateTotalPrice(cart) }}
+                    <h2 v-if="cart">
                         <Popconfirm title="Remove all products?" @confirm="clearCart">
                             <template #icon>
                                 <QuestionCircleFilled style="color: red" />
@@ -393,4 +338,3 @@ body {
     }
 }
 </style>
-    
