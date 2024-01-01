@@ -119,8 +119,6 @@ const products = ref([
 
 ]);
 
-const cart = ref([]);
-
 const searchQuery = ref('');
 
 const filteredProducts = computed(() => {
@@ -147,9 +145,12 @@ const closeDrawer = () => {
 
 const store = useStore();
 
+const cart = computed(() => store.state.cart);
+
 const addToCart = (product) => {
     if (!store.state.cart.some((item) => item.id === product.id)) {
         store.commit('addToCart', product);
+        console.log('Adding to cart:', product);
         notification.open({
             message: 'Success!',
             description: `${product.title} has been added to cart.`,
@@ -160,6 +161,32 @@ const addToCart = (product) => {
             description: `${product.title} is already in your cart!`,
         });
     }
+};
+
+const decreaseQuantity = (item) => {
+  if (item.quantity > 1) {
+    store.commit('decreaseQuantity', item);
+  }
+};
+
+const increaseQuantity = (item) => {
+  store.commit('increaseQuantity', item);
+};
+
+const clearCart = () => {
+  store.commit('clearCart');
+  notification.open({
+    message: 'Success!',
+    description: 'Cart has been cleared.',
+  });
+};
+
+const removeFromCart = (item) => {
+  store.commit('removeFromCart', item);
+  notification.open({
+    message: 'Success!',
+    description: `${item.title} has been removed from the cart.`,
+  });
 };
 
 </script>
