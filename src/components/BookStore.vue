@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import {
     Button, Badge, Drawer,
     Input, Card, Space,
@@ -188,6 +188,18 @@ const removeFromCart = (item) => {
     description: `${item.title} has been removed from the cart.`,
   });
 };
+
+onMounted(() => {
+    const savedCart = JSON.parse(localStorage.getItem('cart') || '[]');
+    store.commit('setCart', savedCart);
+});
+
+store.watch(
+    () => store.state.cart,
+    (newCart) => {
+        localStorage.setItem('cart', JSON.stringify(newCart));
+    }
+);
 
 </script>
 

@@ -5,6 +5,9 @@ const store = createStore({
     cart: [],
   },
   mutations: {
+    setCart(state, cart) {
+      state.cart = cart;
+    },
     addToCart(state, product) {
       const cartItem = {
         id: product.id,
